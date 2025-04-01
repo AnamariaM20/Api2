@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 
-
-const Bookings = () => {
-    const [bookings, setBookings] = useState([]);
+const Bookings = ({ bookings, setBookings }) => {
 
     useEffect(() => {
         fetch("/api/booking")
@@ -13,19 +11,19 @@ const Bookings = () => {
                 }
                 return response.json();
             })
-            .then((data) => setBookings(data))
+            .then((data) => setBookings(data)) 
             .catch((error) => console.error("Error fetching bookings:", error));
     }, []);
 
     return (
         <div>
-            <Link to="/Add" className="btn btn-sm btn-info me-2">Add </Link>   
+            <Link to="/add" className="btn btn-sm btn-info me-2">Add</Link>   
             <h2>Bookings</h2>
 
             <table className="table table-striped">
                 <thead>
                     <tr>
-                    <th>ID</th>
+                        <th>ID</th>
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Price</th>
@@ -36,29 +34,18 @@ const Bookings = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {
-                        bookings.map((booking) => (
-                            <tr key={booking.bookingid}>
-                                <td>{booking.bookingid}</td>
-                                <td>{booking.firstname}</td>
-                                <td>{booking.lastname}</td>
-                                <td>{booking.totalprice}</td>
-                                <td>{booking.depositpaid ? "Yes" : "No"}</td>
-                                <td>{booking.bookingdates ? booking.bookingdates.checkin : "N/A"}</td>
-                                <td>{booking.bookingdates ? booking.bookingdates.checkout : "N/A"}</td>
-                                <td>{booking.additionalneeds || "N/A"}</td>
-                                <td>
-        
-                                    
-                                    <button className="btn btn-sm btn-primary me-2"
-                                    onClick={() => handleEdit(product.id)} >Edit</button>
-                                    <button className="btn btn-sm btn-danger"
-                                    onClick={() => deleteFunction(product)}>Delete</button>
-                                </td>
-                            
-                            </tr>
-                        ))
-                    }
+                    {bookings.map((booking) => (
+                        <tr key={booking.bookingid}>
+                            <td>{booking.bookingid}</td>
+                            <td>{booking.firstname}</td>
+                            <td>{booking.lastname}</td>
+                            <td>{booking.totalprice}</td>
+                            <td>{booking.depositpaid ? "Yes" : "No"}</td>
+                            <td>{booking.bookingdates ? booking.bookingdates.checkin : "N/A"}</td>
+                            <td>{booking.bookingdates ? booking.bookingdates.checkout : "N/A"}</td>
+                            <td>{booking.additionalneeds || "N/A"}</td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </div>

@@ -8,7 +8,7 @@ import AddBook from "./AddBook";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-{/* <Routes>
+  {/* <Routes>
         {!isAuthenticated ? (
           <Route path="*" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
         ) : (
@@ -20,13 +20,16 @@ function App() {
           </>
         )}
       </Routes> */}
+
+  const [bookings, setBookings] = useState([]); // Mutăm starea la nivel global
+
   return (
     <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<Bookings />} />
-      <Route path="/add" element={<AddBook />} />
-    </Routes>
-      
+      <Routes>
+        <Route path="/" element={<Bookings bookings={bookings} setBookings={setBookings} />} />
+        <Route path="/add" element={<AddBook setBookings={setBookings} />} />
+      </Routes>
+
     </BrowserRouter>
   );
 }

@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const AddBook = () => {
+const AddBook = ({ setBookings }) => {
     const [dates, setDates] = useState({
-        datesid: 0,
         firstname: "",
         lastname: "",
         totalprice: "",
@@ -15,32 +14,28 @@ const AddBook = () => {
         additionalneeds: "",
     });
 
-    const navigate = useNavigate();
+    const navigate = useNavigate(); 
 
     const handleAdd = async (event) => {
         event.preventDefault();
+        console.log("Submitting:", dates);
 
-        try {
-            const response = await fetch("/api/booking", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(dates),
-            });
+        if (!dates.firstname || !dates.lastname || !dates.totalprice || !dates.bookingdates.checkin || !dates.bookingdates.checkout) {
+            alert("Please fill in all required fields.");
+            return;
+        }
 
-            const data = await response.json();
+        let result = await fetch("/api/booking", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dates),
+        });
 
-            if (!response.ok) {
-                throw new Error(data.message || "Eroare la salvarea datelor");
-            }
+        result = await result.json();
+        console.log("Response:", result);
 
-            console.log("Booking saved:", data);
-            alert("Booking adăugat cu succes!");
-            navigate("/");
-        } catch (error) {
-            console.error("Eroare API:", error);
-            alert("Eroare la trimiterea datelor: " + error.message);
+        if (result) {
+            navigate("/"); 
         }
     };
 
@@ -48,18 +43,7 @@ const AddBook = () => {
         <>
             <h2>Add a Booking</h2>
             <form onSubmit={handleAdd}>
-                <div>
-                    <label htmlFor="datesid">ID:</label>
-                    <input
-                        type="text"
-                        name="datesid"
-                        className="form-control"
-                        placeholder="Enter an ID"
-                        value={dates.datesid}
-                        onChange={(e) => setDates({ ...dates, datesid: e.target.value || "0"})}
-                        required
-                    />
-                </div>
+                
                 <div>
                     <label htmlFor="firstname">First Name:</label>
                     <input
@@ -92,7 +76,7 @@ const AddBook = () => {
                         className="form-control"
                         placeholder="Enter Total Price"
                         value={dates.totalprice}
-                        onChange={(e) => setDates({ ...dates, totalprice: e.target.value })}
+                        onChange={(e) => setDates({ ...dates, totalprice: Number(e.target.value) })}
                         required
                     />
                 </div>
@@ -114,7 +98,7 @@ const AddBook = () => {
                         className="form-control"
                         value={dates.bookingdates.checkin}
                         onChange={(e) =>
-                            setDates((prev) => ({
+                            setDates(prev => ({
                                 ...prev,
                                 bookingdates: { ...prev.bookingdates, checkin: e.target.value },
                             }))
@@ -130,7 +114,7 @@ const AddBook = () => {
                         className="form-control"
                         value={dates.bookingdates.checkout}
                         onChange={(e) =>
-                            setDates((prev) => ({
+                            setDates(prev => ({
                                 ...prev,
                                 bookingdates: { ...prev.bookingdates, checkout: e.target.value },
                             }))
