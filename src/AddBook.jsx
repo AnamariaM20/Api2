@@ -35,6 +35,7 @@ const AddBook = ({ setBookings }) => {
         console.log("Response:", result);
 
         if (result) {
+            setBookings(prev => [...prev, result]); 
             navigate("/"); 
         }
     };
