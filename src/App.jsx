@@ -1,14 +1,13 @@
-import { useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { use, useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import Bookings from "./Bookings";
 import AddBook from "./AddBook";
 
-function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  {/* <Routes>
+//const [isAuthenticated, setIsAuthenticated] = useState(false);
+{/* <Routes>
         {!isAuthenticated ? (
           <Route path="*" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
         ) : (
@@ -20,16 +19,16 @@ function App() {
           </>
         )}
       </Routes> */}
-
-  const [bookings, setBookings] = useState([]); // Mutăm starea la nivel global
-
+function App() {
+  const [bookings, setBookings] = useState([]);
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Bookings bookings={bookings} setBookings={setBookings} />} />
+        <Route path="/" element={<Navigate to="/bookings" />} />
+        <Route path="/bookings" element={<Bookings bookings={bookings} setBookings={setBookings} />} />
+        <Route path="/booking/:bookingid" element={<Bookings bookings={bookings} setBookings={setBookings} />} />
         <Route path="/add" element={<AddBook setBookings={setBookings} />} />
       </Routes>
-
     </BrowserRouter>
   );
 }
